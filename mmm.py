@@ -50,6 +50,8 @@ match sys.argv[1].lower():
 		with open('manifest.json', 'r') as f:
 			manifest = json.load(f)
 	
+		mc_ver = manifest['minecraft']['version']
+		forge_ver = manifest['minecraft']['modLoaders'][0]['id']
 		mods = manifest['files']
 
 		curr = 1
@@ -67,7 +69,7 @@ match sys.argv[1].lower():
 					#data = requests.get(dl, stream=True)
 					#total = len(data.content)
 					#for byte in tqdm(data.iter_content(), total=total, unit='B', unit_scale=True, unit_divisor=1024, desc=f'{mod}'):
-					print(f'Downloading {mod}... {curr}/{total}', end=' ')
+					print(f'Downloading {mod}... {curr}/{total}', end=' ', flush=True)
 					#for byte in data.iter_content():
 					#	f.write(byte)
 					f.write(requests.get(dl).content)
@@ -96,7 +98,7 @@ match sys.argv[1].lower():
 			dl = json.loads(r.text)['data']
 			mod = dl.split('/')[-1]
 
-			print(f'Installing {mod}... {curr}/{total}',end=' ')
+			print(f'Installing {mod}... {curr}/{total}',end=' ', flush=True)
 			shutil.copy(f'{mod_dir}/{mod}', f'{app_dir}/{mod}')
 			print('DONE')
 
@@ -114,8 +116,12 @@ match sys.argv[1].lower():
 		print('Destroying evidence...')
 		os.remove('manifest.json')
 		shutil.rmtree('overrides')
-		shutil.move(sys.argv[2], f'{mp_dir}')
+		if not os.path.exists(f'{mp_dir}/{sys.argv[2]}'):
+			shutil.move(sys.argv[2], f'{mp_dir}')
+		else:
+			os.remove(sys.argv[2])
 		print('Everything ready to go!')
+		print(f'Remember to install {forge_ver} for Minecraft {mc_ver} manually!')
 	case 'import':
 		newm = 0
 		repeatm = 0
