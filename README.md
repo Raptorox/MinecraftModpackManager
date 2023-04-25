@@ -19,3 +19,4 @@ This is a simple script to manage modpacks for Minecraft. It is designed to be u
 - [ ] Progress bar for downloads and installs
 - [ ] Unused mods cleanup
 - [ ] Use a modpack from internal storage if it already is there
+- [ ] Add relative modpack paths
